@@ -1,7 +1,9 @@
+#include <chrono>
 #include <iostream>
-#include <stdio.h>
+#include <fstream>
 
 using namespace std;
+using namespace std::chrono;
 
 int estupido(string needle, string haystack) {
     for(int i = 0; i < haystack.length(); i++) {
@@ -24,35 +26,26 @@ int boyreMoore(string needle, string haystack) {
     for(int i = 0; i < 255; i++)
         alphabet[i] = needle.length();
     for(int i = 0; i < needle.length(); i++)
-        alphabet[(int)needle[i]] = needle[i];
-
-    for(int i = 0; i < 255; i++) {
-        cout << alphabet[i] << endl;
-    }
+        alphabet[(int)needle[i]] = needle.length() - i;
 
     int addedIndex;
     for(int i = needle.length() - 1; i < haystack.length(); i += addedIndex) {
-        if(needle[needle.length() - 1] == haystack[i]) {
-            int checked = 0;
-            for(int j = 1; j < needle.length(); j++) {
-                if(haystack[i - j] == needle[needle.length() - (j + 1)])
-                    checked++;
-                else
-                    break;
-            }
-            if(checked == needle.length())
-                return i;
+        int checked = 0;
+        for(int j = 0; j < needle.length(); j++) {
+            if(haystack[i - j] == needle[needle.length() - j - 1])
+                checked++;
+            else
+                break;
         }
+        if(checked == needle.length())
+            return i - (needle.length() - 1);
         addedIndex = alphabet[(int)haystack[i]];
     }
     return -1;
 }
 
 int main() {
-    string needle = "ips";
-    string haystack = "lorem ipsum";
-    cout << estupido(needle, haystack) << endl;
-    cout << boyreMoore(needle, haystack) << endl;
+
     return 0;
 }
 
