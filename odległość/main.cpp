@@ -49,7 +49,7 @@ int roundup(float a) {
 }
 
 string* fragmenter(string word, int maxLength) {
-    string fragments [roundup(word.length()/maxLength)];
+    string* fragments [roundup(word.length()/maxLength)];
     // cout << roundup(word.length()/maxLength) << endl;
     string add;
     int fragment = 0;
@@ -66,12 +66,57 @@ string* fragmenter(string word, int maxLength) {
     return fragments;
 }
 
-int fuzzySearch(string needle, string heystack, int fragmentLength) {
-    string* fragments = fragmenter(needle, fragmentLength);
-    for(int i = 0; i < fragments.length() + 1; i++) {
-        cout << fragments[i] << endl;
+int boyreMoore(string needle, string heystack) {
+    int alphabet[256];
+
+    for(int i = 0; i < 255; i++)
+        alphabet[i] = needle.length();
+    for(int i = needle.length() - 1 ; i >= 0; i--)
+        if(alphabet[(int)needle[i]] == needle.length())
+            alphabet[(int)needle[i]] = needle.length() - i;
+
+    int addedIndex;
+    for(int i = needle.length() - 1; i < heystack.length(); i += addedIndex) {
+        int checked = 0;
+        for(int j = 0; j < needle.length(); j++) {
+            if(heystack[i - j] == needle[needle.length() - j - 1])
+                checked++;
+            else
+                break;
+        }
+        // cout << "checked: " << checked << endl;
+        // cout << "addedIndex: " << alphabet[(int)heystack[i]] << endl;
+        // cout << "heystack[i]: " << heystack[i] << endl;
+        if(checked == needle.length()){
+            return i - (needle.length() - 1);
+        }
+        addedIndex = alphabet[(int)heystack[i]];
     }
-    return 0;
+    return -1;
+}
+
+int* fuzzySearch(string needle, string heystack, int fragmentLength) {
+    string* fragments = fragmenter(needle, fragmentLength);
+    // for(int i = 0; i < fragments.length() + 1; i++) {
+    //     cout << fragments[i] << endl;
+    // }
+    int fragmentSumLength = 0;
+    for(int i = 0; i < fragments.length() + 1; i++) {
+        fragmentSumLength += fragments[i].length();
+        int index = boyreMoore(fragments[i], heystack);
+        if (index != -1){
+            int checked = 0;
+            for(int j = 0; j < needle.length(); j++){
+                if(heystack[i - fragmentSumLength + j] == needle[j])
+                    checked++
+                else
+                    break
+            }
+            if(checked == needle.length() - 1)
+                return index;
+        }
+    }
+    return -1;
 }
 
 int main() {
