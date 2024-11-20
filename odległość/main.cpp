@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -42,8 +43,40 @@ int Levenshtein(string first, string second) {
     return table[first.length()][second.length()];
 }
 
+int roundup(float a) {
+    if(a - round(a) < 0.5) return round(a) + 1;
+    else return round(a);
+}
+
+string* fragmenter(string word, int maxLength) {
+    string fragments [roundup(word.length()/maxLength)];
+    // cout << roundup(word.length()/maxLength) << endl;
+    string add;
+    int fragment = 0;
+    for(int i = 0; i < word.length(); i++) {
+        add += word[i];
+        // cout << add << endl;
+        if((i + 1)% maxLength == 0 || i == word.length() - 1) {
+            // cout << fragment << endl;
+            fragments[fragment] = add;
+            add = "";
+            fragment++;
+        }
+    }
+    return fragments;
+}
+
+int fuzzySearch(string needle, string heystack, int fragmentLength) {
+    string* fragments = fragmenter(needle, fragmentLength);
+    for(int i = 0; i < fragments.length() + 1; i++) {
+        cout << fragments[i] << endl;
+    }
+    return 0;
+}
+
 int main() {
     // cout << Hamming("pieski", "pkotki") << endl;
-    cout << Levenshtein("madagaskar", "magdagaska") << endl;
+    // cout << Levenshtein("madagaskar", "magdagaska") << endl;
+    fuzzySearch("labadabadu", "tak", 3);
     return 0;
 }
