@@ -3,4 +3,5 @@ project(niemiec)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(niemiec boyre-moore/main.cpp)
+add_executable(niemiec boyre-moore/main.cpp
+        odległość/main.cpp)
