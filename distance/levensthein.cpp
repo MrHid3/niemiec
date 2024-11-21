@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 using namespace std;
 
@@ -43,22 +44,16 @@ int Levenshtein(string first, string second) {
     return table[first.length()][second.length()];
 }
 
-int roundup(float a) {
-    if(a - round(a) < 0.5) return round(a) + 1;
-    else return round(a);
-}
-
-string* fragmenter(string word, int maxLength) {
-    string* fragments [roundup(word.length()/maxLength)];
-    // cout << roundup(word.length()/maxLength) << endl;
+vector<string> fragmenter(string word, int maxLength) {
+    vector<string> fragments(ceil(word.length()/maxLength));
     string add;
     int fragment = 0;
     for(int i = 0; i < word.length(); i++) {
         add += word[i];
-        // cout << add << endl;
+        // cout << i << endl;
         if((i + 1)% maxLength == 0 || i == word.length() - 1) {
-            // cout << fragment << endl;
             fragments[fragment] = add;
+            // cout << fragments[fragment] << endl;
             add = "";
             fragment++;
         }
@@ -95,26 +90,23 @@ int boyreMoore(string needle, string heystack) {
     return -1;
 }
 
-int* fuzzySearch(string needle, string heystack, int fragmentLength) {
-    string* fragments = fragmenter(needle, fragmentLength);
+int fuzzySearch(string needle, string heystack, int fragmentLength, int maxDifference) {
+    vector<string> fragments = fragmenter(needle, fragmentLength);
     // for(int i = 0; i < fragments.length() + 1; i++) {
     //     cout << fragments[i] << endl;
     // }
     int fragmentSumLength = 0;
-    for(int i = 0; i < fragments.length() + 1; i++) {
-        fragmentSumLength += fragments[i].length();
+    for(int i = 0; i < fragments.size(); i++) {
         int index = boyreMoore(fragments[i], heystack);
         if (index != -1){
-            int checked = 0;
-            for(int j = 0; j < needle.length(); j++){
-                if(heystack[i - fragmentSumLength + j] == needle[j])
-                    checked++
-                else
-                    break
-            }
-            if(checked == needle.length() - 1)
+            string toCheck;
+            if(index - fragmentSumLength >= 0)
+                for(int j = 0; j < needle.length(); j++)
+                    toCheck += heystack[index - fragmentSumLength + j];
+            if(Levenshtein(toCheck, needle) <= maxDifference)
                 return index;
         }
+        fragmentSumLength += fragments[i].length();
     }
     return -1;
 }
@@ -122,6 +114,9 @@ int* fuzzySearch(string needle, string heystack, int fragmentLength) {
 int main() {
     // cout << Hamming("pieski", "pkotki") << endl;
     // cout << Levenshtein("madagaskar", "magdagaska") << endl;
-    fuzzySearch("labadabadu", "tak", 3);
+
+    cout << fuzzySearch("skibidi", "askibidi", 3, 2) << endl;
+    // fuzzySearch("skibidi", "bidbidbidbdidibdbididbdibdidibskibidi", 3, 2);
+    cout << boyreMoore("ips", "lorem ipsum");
     return 0;
 }
