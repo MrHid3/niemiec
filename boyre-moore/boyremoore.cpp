@@ -33,23 +33,25 @@ int boyreMoore(string needle, string heystack) {
 
     for(int i = 0; i < 255; i++)
         alphabet[i] = needle.length();
-    for(int i = needle.length() - 1 ; i >= 0; i--)
+    for(int i = needle.length() - 1; i >= 0; i--)
         if(alphabet[(int)needle[i]] == needle.length())
             alphabet[(int)needle[i]] = needle.length() - i;
 
     int addedIndex;
     for(int i = needle.length() - 1; i < heystack.length(); i += addedIndex) {
-        int checked = 0;
+        bool checked = false;
         for(int j = 0; j < needle.length(); j++) {
             if(heystack[i - j] == needle[needle.length() - j - 1])
-                checked++;
-            else
+                checked = true;
+            else{
+                checked = false;
                 break;
+            }
         }
         // cout << "checked: " << checked << endl;
         // cout << "addedIndex: " << alphabet[(int)heystack[i]] << endl;
         // cout << "heystack[i]: " << heystack[i] << endl;
-        if(checked == needle.length()){
+        if(checked){
             return i - (needle.length() - 1);
         }
         addedIndex = alphabet[(int)heystack[i]];
