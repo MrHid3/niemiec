@@ -3,9 +3,8 @@ project(niemiec)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(
-        niemiec
+add_executable(niemiec
         boyre-moore/boyremoore.cpp
-        distance/levensthein.cpp
+#        distance/levensthein.cpp
 
 )
