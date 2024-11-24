@@ -7,11 +7,9 @@ using namespace std;
 using namespace std::chrono;
 
 int estupido(string needle, string haystack) {
-    int stupidmeter = 0;
     for(int i = 0; i < haystack.length(); i++) {
         int checked = 0;
         for(int j = 0; j < needle.length(); j++) {
-            stupidmeter++;
             if(haystack[i + j] == needle[j])
                 checked++;
             else {
