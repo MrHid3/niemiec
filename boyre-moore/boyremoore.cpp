@@ -39,15 +39,12 @@ int boyreMoore(string needle, string heystack) {
 
     int addedIndex;
     for(int i = needle.length() - 1; i < heystack.length(); i += addedIndex) {
-        bool checked = false;
-        for(int j = 0; j < needle.length(); j++) {
-            if(heystack[i - j] == needle[needle.length() - j - 1])
-                checked = true;
-            else{
+        bool checked = true;
+        for(int j = 0; j < needle.length(); j++)
+            if(heystack[i - j] != needle[needle.length() - j - 1]){
                 checked = false;
                 break;
             }
-        }
         // cout << "checked: " << checked << endl;
         // cout << "addedIndex: " << alphabet[(int)heystack[i]] << endl;
         // cout << "heystack[i]: " << heystack[i] << endl;
