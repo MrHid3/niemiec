@@ -58,7 +58,7 @@ int main() {
     string needle = "string";
     ifstream f("../boyre-moore/lorem.txt");
     if (!f.is_open()) {
-        cerr << "Error opening the file!";
+        cout << "Error opening the file!";
         return 1;
     }
     string heystack;
